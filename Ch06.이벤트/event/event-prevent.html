@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      div {
+        width: 250px;
+        height: 250px;
+        background-color: yellow;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <input type="checkbox" />
+    </div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <script>
+      document.addEventListener('wheel', (event) => {
+        console.log('scrolling');
+        event.preventDefault();
+        // 에러 발생
+        // event-prevent.html:32 [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
+        // See https://www.chromestatus.com/feature/6662647093133312
+
+        // 아래 click 이벤트처럼 브라우저가 작업을 기다린 다음에 event prevent하는 것 아니다
+        // 하지만 빠르게 사용자가 스크롤 해야하는 경우에 굉장히느려지기 때문에
+        // 이 스크롤처럼 빠르게 무엇인가 동작해야 하는 경우에는
+        // prevetDefault를 무시한다는 것
+        // 브라우저는 우리에게 스크롤링이 되고 있다고 알려주고 자기할 일을 하게 된다
+
+        // 스크롤이 된 이벤트를 들을 수만 있지 이벤트를 추가할 수 없다
+
+        // 하지만 mdn 가서 option 보면 (once, passive)등 옵션으로 설정할 수 있다
+        // {passive:false}로 설정하면 preventDefault 호출가능하다
+        // 즉 브라우저에서 스크롤이 되지 않게 된다
+        // 하지만 왠만해서는 이렇게 false로 설정하지 않는 것이 좋다
+      });
+
+      const checkbox = document.querySelector('input');
+      checkbox.addEventListener('click', (event) => {
+        // long, 오랫동안 무엇을 하게 된다
+        // 그러면 브라우저는 해당 작업을 하고나서 아래 작업 실행
+        console.log('checked');
+        event.preventDefault();
+        // 브라우저에서 발생한 기본적인 동작을 취소하는 것
+        // 따라서 checked는 출력되지만 input 테그에 체크가 되지 않는다
+      });
+    </script>
+  </body>
+</html>
